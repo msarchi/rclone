@@ -460,7 +460,11 @@ func (c *Cipher) encryptFileName(in string) string {
 		}
 
 		if c.mode == NameEncryptionStandard {
-			segments[i] = c.encryptSegment(segments[i])
+			if len(segments[i]) == 0 {
+				segments[i] = c.encryptSegment(segments[i])
+			} else {
+				segments[i] = c.encryptSegment(segments[i]) + "_"
+			}
 		} else {
 			segments[i] = c.obfuscateSegment(segments[i])
 		}
@@ -516,7 +520,7 @@ func (c *Cipher) decryptFileName(in string) (string, error) {
 		}
 
 		if c.mode == NameEncryptionStandard {
-			segments[i], err = c.decryptSegment(segments[i])
+			segments[i], err = c.decryptSegment(segments[i][:len(segments[i])-1])
 		} else {
 			segments[i], err = c.deobfuscateSegment(segments[i])
 		}
