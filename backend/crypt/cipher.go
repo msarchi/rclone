@@ -520,7 +520,11 @@ func (c *Cipher) decryptFileName(in string) (string, error) {
 		}
 
 		if c.mode == NameEncryptionStandard {
-			segments[i], err = c.decryptSegment(segments[i][:len(segments[i])-1])
+			if segments[i][len(segments[i])-1:] == "_" {
+				segments[i], err = c.decryptSegment(segments[i][:len(segments[i])-1])
+			} else {
+				segments[i], err = c.decryptSegment(segments[i])
+			}
 		} else {
 			segments[i], err = c.deobfuscateSegment(segments[i])
 		}
